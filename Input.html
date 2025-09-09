@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Find Your Land</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Leaflet CSS -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  />
+
+  <style>
+    body {
+      font-family: "Roboto", sans-serif;
+      margin: 0;
+      padding: 0;
+      color: #333;
+      background-image: url(
+        "https://plus.unsplash.com/premium_photo-1661900503280-36c1b4be3a66?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fHVybCUyMGZhcm18ZW58MHx8MHx8fDA%3D"
+      );
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      text-align: center;
+    }
+
+    .container {
+      background-color: rgba(255, 255, 255, 0.85);
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      max-width: 600px;
+      width: 90%;
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px); /* For Safari */
+    }
+
+    h1 {
+      color: #2c5a2c;
+      margin-bottom: 10px;
+      font-size: 2.5em;
+    }
+
+    p {
+      margin-top: 0;
+      margin-bottom: 30px;
+      font-size: 1.1em;
+      color: #555;
+    }
+
+    .input-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+      color: #444;
+    }
+
+    select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-sizing: border-box;
+      font-size: 1em;
+      transition: border-color 0.3s;
+      -webkit-appearance: none; /* Removes default dropdown arrow in WebKit browsers */
+      -moz-appearance: none; /* Removes default dropdown arrow in Firefox */
+      appearance: none; /* Removes default dropdown arrow */
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="6" viewBox="0 0 10 6"><path fill="rgb(44, 90, 44)" d="M5 6L0 0h10z"/></svg>') no-repeat right 12px center;
+      background-size: 10px 6px;
+    }
+
+    select:focus {
+      outline: none;
+      border-color: #2c5a2c;
+      box-shadow: 0 0 5px rgba(44, 90, 44, 0.5);
+    }
+
+    .divider {
+      margin: 20px 0;
+      color: #666;
+      font-style: italic;
+      font-size: 0.9em;
+    }
+
+    button {
+      background-color: #2c5a2c;
+      color: white;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1em;
+      font-weight: bold;
+      transition: background-color 0.3s, transform 0.2s;
+    }
+
+    button:hover {
+      background-color: #3b7b3b;
+      transform: translateY(-2px);
+    }
+
+    /* Map container styling */
+    #map {
+      height: 300px;
+      width: 100%;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Find Your Perfect Plot 🚜</h1>
+    <p>Select a district from Odisha or use the map to find nearby agricultural land.</p>
+
+    <div class="input-group">
+      <label for="odisha-districts">Choose a District:</label>
+      <select id="odisha-districts" name="district">
+        <option value="">-- Select a District --</option>
+        <option value="Angul">Angul</option>
+        <option value="Balangir">Balangir</option>
+        <option value="Balasore">Balasore</option>
+        <option value="Bargarh">Bargarh</option>
+        <option value="Bhadrak">Bhadrak</option>
+        <option value="Boudh">Boudh</option>
+        <option value="Cuttack">Cuttack</option>
+        <option value="Deogarh">Deogarh</option>
+        <option value="Dhenkanal">Dhenkanal</option>
+        <option value="Gajapati">Gajapati</option>
+        <option value="Ganjam">Ganjam</option>
+        <option value="Jagatsinghpur">Jagatsinghpur</option>
+        <option value="Jajpur">Jajpur</option>
+        <option value="Jharsuguda">Jharsuguda</option>
+        <option value="Kalahandi">Kalahandi</option>
+        <option value="Kandhamal">Kandhamal</option>
+        <option value="Kendrapara">Kendrapara</option>
+        <option value="Keonjhar">Keonjhar</option>
+        <option value="Khordha">Khordha</option>
+        <option value="Koraput">Koraput</option>
+        <option value="Malkangiri">Malkangiri</option>
+        <option value="Mayurbhanj">Mayurbhanj</option>
+        <option value="Nabarangpur">Nabarangpur</option>
+        <option value="Nayagarh">Nayagarh</option>
+        <option value="Nuapada">Nuapada</option>
+        <option value="Puri">Puri</option>
+        <option value="Rayagada">Rayagada</option>
+        <option value="Sambalpur">Sambalpur</option>
+        <option value="Subarnapur">Subarnapur</option>
+        <option value="Sundargarh">Sundargarh</option>
+      </select>
+    </div>
+
+    <div class="divider">or</div>
+
+    <div class="input-group">
+      <label>Select on Map:</label>
+      <div id="map"></div>
+    </div>
+
+    <button type="submit">Search</button>
+  </div>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // Initialize the map centered on Odisha, India
+      const map = L.map("map").setView([20.9517, 85.0985], 7);
+
+      // Add OpenStreetMap tiles
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 18,
+        attribution: "© OpenStreetMap contributors",
+      }).addTo(map);
+
+      // Add a draggable marker at the center
+      const marker = L.marker([20.9517, 85.0985], { draggable: true }).addTo(map);
+
+      // Show coordinates when marker is dragged
+      marker.on("dragend", function (e) {
+        const position = marker.getLatLng();
+        alert(
+          `Selected location: Latitude ${position.lat.toFixed(
+            5
+          )}, Longitude ${position.lng.toFixed(5)}`
+        );
+      });
+    });
+  </script>
+</body>
+</html>
