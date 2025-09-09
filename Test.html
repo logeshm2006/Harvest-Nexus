@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harvest Nexus - AI-Powered Crop Prediction</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for enhanced uniqueness and animations */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            background-color: #f4f4f4; /* Fallback background */
+        }
+
+        .hero-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .hero-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+            filter: brightness(0.6); /* Dim the image for text readability */
+            transition: filter 0.5s ease;
+        }
+
+        .hero-overlay {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem;
+            color: white;
+            text-align: center;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 1200px;
+            margin-bottom: auto;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-section h1 {
+            font-weight: bold;
+            font-size: 2.5rem; /* Bold heading */
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+        }
+
+        .button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            color: white;
+            font-weight: bold;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-decoration: none;
+        }
+
+        .button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .sign-in-button {
+            opacity: 0.9; /* Slightly dim to show it's active */
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0px rgba(255,255,255,0.5); }
+            100% { box-shadow: 0 0 0 10px rgba(255,255,255,0); }
+        }
+
+        .overview {
+            max-width: 800px;
+            line-height: 1.8;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .instruction-button {
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .logo-section h1 {
+                font-size: 2rem;
+            }
+            .overview {
+                font-size: 1rem;
+                padding: 1rem;
+            }
+        }
+
+        /* Animation for overview text */
+        .overview p {
+            animation: fadeInUp 2s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="hero-container">
+        <!-- Background image using <img> tag as per guidelines -->
+        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/47b20236-7c69-42c6-805e-fda822b7c55b.png" alt="Vast agricultural landscape at dawn with fertile fields of wheat and corn under a golden sunrise, farm equipment in distance, emphasizing sustainable farming and crop growth in a natural rural environment with misty horizons and healthy soil patterns" class="hero-image" />
+
+        <div class="hero-overlay">
+            <!-- Top flexbox with sign-in button and heading -->
+            <div class="header">
+                <div class="logo-section">
+                    <h1>Harvest Nexus</h1>
+                </div>
+                <button onclick="window.location.href='login.html'">Sign in</button>
+            </div>
+
+            <!-- Overview at center -->
+            <div class="overview">
+                <h2>AI-Powered Crop Yield Prediction & Optimization</h2>
+                <p>Helping farmers make smarter decisions with data. Our platform uses artificial intelligence and real-time insights to predict crop yields, analyze weather and soil conditions, and provide actionable recommendations for better planning. With this, farmers can reduce risks, improve productivity, and use resources more efficiently—leading to sustainable and profitable farming.</p>
+            </div>
+
+            <!-- Instruction button below overview -->
+            <button class="button instruction-button" onclick="alert('Instruction panel: \n Step 1 - Sign up for an account. \n Step 2 - Upload your farm data.\n Step 3 - Receive AI predictions!')">Instructions</button>
+        </div>
+    </div>
+
+    <script>
+        // Simple JavaScript for potential future enhancements, e.g., animate on load
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Page loaded successfully.');
+            // You can add more JS here, e.g., for form handling if needed later
+        });
+
+    </script>
+</body>
+</html>
+</content>
+</create_file>

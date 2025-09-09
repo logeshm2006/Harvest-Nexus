@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Interactive Sign In Page</title>
+    <!-- Importing Tailwind CSS for responsive and modern styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for enhanced interactivity and uniqueness */
+        body {
+            background-size: 400% 400%;
+            font-family: 'Inter', sans-serif;
+        }
+        .container {
+            backdrop-filter: blur(10px);
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 1s ease-in;
+        }
+        .input-group {
+            position: relative;
+        }
+        .input-field {
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            width: 100%;
+            font-size: 16px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .input-field:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+        .icon {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+            cursor: pointer;
+        }
+        .btn {
+            background-color:#4f46e5;
+            color: white;
+            padding: 12px 32px;
+            border-radius: 12px;
+            font-weight: bold;
+            width: 100%;
+        }
+        .btn:hover {
+            transform: scale(1.05);
+        }
+        .error-message {
+            color: #ef4444;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+        .success-message {
+            color: #10b981;
+            font-size: 16px;
+            margin-top: 20px;
+            display: none;
+        }
+        /* Custom checkbox styling */
+        .checkbox-container {
+            accent-color: #4f46e5;
+        }
+        /* Mobile responsiveness adjustments */
+        @media (max-width: 768px) {
+            .container {
+                margin: 20px;
+                padding: 40px 30px;
+            }
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen">
+<img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/47b20236-7c69-42c6-805e-fda822b7c55b.png" alt="Vast agricultural landscape at dawn with fertile fields of wheat and corn under a golden sunrise, farm equipment in distance, emphasizing sustainable farming and crop growth in a natural rural environment with misty horizons and healthy soil patterns"/>
+    <div class="container p-8 max-w-md w-full mx-4">
+        <div class="text-center mb-6">
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">Welcome Back</h1>
+            <p class="text-gray-600">Sign in to your account</p>
+        </div>
+        <form id="loginForm" novalidate>
+            <div class="mb-4">
+                <label for="fullName" class="block text-gray-700 font-medium mb-2">User name</label>
+                <input type="text" id="fullName" class="input-field" placeholder="Enter your full name" required>
+                <div class="error-message" id="nameError">Please enter your full name.</div>
+            </div>
+            <div class="mb-4">
+                <label for="email" class="block text-gray-700 font-medium mb-2">Email</label>
+                <input type="email" id="email" class="input-field" placeholder="Enter your email" required>
+                <div class="error-message" id="emailError">Please enter a valid email address.</div>
+            </div>
+            <div class="mb-4 input-group">
+                <label for="password" class="block text-gray-700 font-medium mb-2">Password</label>
+                <input type="password" id="password" class="input-field pr-12" placeholder="Enter your password" required>
+                <span class="icon" id="togglePassword" title="Toggle visibility">👁</span>
+                <div class="error-message" id="passwordError">Password must be at least 8 characters long.</div>
+            </div>
+            <div class="flex items-center mb-6">
+                <input type="checkbox" id="rememberMe" class="checkbox-container">
+                <label for="rememberMe" class="ml-2 text-gray-700">Remember me</label>
+            </div>
+            <button type="submit" class="btn">Sign In</button>
+        </form>
+        <div id="successMessage" class="success-message text-center"></div>
+        <p class="text-center text-gray-600 mt-6">Don't have an account? <a href="sign-up.html" class="text-indigo-600 hover:underline">Sign up here</a></p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('loginForm');
+            const fullNameInput = document.getElementById('fullName');
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
+            const togglePassword = document.getElementById('togglePassword');
+            const nameError = document.getElementById('nameError');
+            const emailError = document.getElementById('emailError');
+            const passwordError = document.getElementById('passwordError');
+            const successMessage = document.getElementById('successMessage');
+
+            // Toggle password visibility
+            togglePassword.addEventListener('click', () => {
+                const type = passwordInput.type === 'password' ? 'text' : 'password';
+                passwordInput.type = type;
+                togglePassword.textContent = type === 'password' ? '👁' : '🙈';
+            });
+
+            // Real-time validation
+            fullNameInput.addEventListener('blur', () => {
+                if (fullNameInput.value.trim().length < 2) {
+                    nameError.style.display = 'block';
+                    nameError.textContent = 'Full name must be at least 2 characters.';
+                } else {
+                    nameError.style.display = 'none';
+                }
+            });
+
+            emailInput.addEventListener('blur', () => {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(emailInput.value)) {
+                    emailError.style.display = 'block';
+                } else {
+                    emailError.style.display = 'none';
+                }
+            });
+
+            passwordInput.addEventListener('blur', () => {
+                if (passwordInput.value.length < 8) {
+                    passwordError.style.display = 'block';
+                } else {
+                    passwordError.style.display = 'none';
+                }
+            });
+
+            // Form submission
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                let isValid = true;
+                // Check all fields manually on submit
+                if (fullNameInput.value.trim().length < 2) {
+                    nameError.style.display = 'block';
+                    isValid = false;
+                } else {
+                    nameError.style.display = 'none';
+                }
+                {
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailRegex.test(emailInput.value)) {
+                        emailError.style.display = 'block';
+                        isValid = false;
+                    } else {
+                        emailError.style.display = 'none';
+                    }
+                }
+                if (passwordInput.value.length < 8) {
+                    passwordError.style.display = 'block';
+                    isValid = false;
+                } else {
+                    passwordError.style.display = 'none';
+                }
+
+                if (isValid) {
+                    // Simulate success
+                    successMessage.textContent = `Welcome, ${fullNameInput.value}! You have successfully logged in.`;
+                    successMessage.style.display = 'block';
+                    // Reset form
+                    setTimeout(() => {
+                        form.reset();
+                        successMessage.style.display = 'none';
+                        fullNameInput.focus();
+                        togglePassword.textContent = '👁';
+                        passwordInput.type = 'password';
+                    }, 3000);
+                }
+            });
+
+            // Focus first input on load
+            fullNameInput.focus();
+        });
+    </script>
+</body>
+</html>
