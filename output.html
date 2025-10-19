@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harvest Nexus - Weather & Crop Forecast</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap');
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: #fff;
+            min-height: 100vh;
+            background: url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6); /* Dark overlay for readability */
+            backdrop-filter: blur(3px); /* Slight blur for depth */
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.08); /* Semi-transparent white background */
+            backdrop-filter: blur(10px); /* Frosted glass effect */
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.8rem;
+            color: #a3d977;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+        }
+
+        .logo i {
+            font-size: 2rem;
+            color: #a3d977;
+        }
+
+        .back-btn {
+            background: rgba(163, 217, 119, 0.2);
+            color: #a3d977;
+            padding: 10px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid rgba(163, 217, 119, 0.3);
+        }
+
+        .back-btn:hover {
+            background: rgba(163, 217, 119, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+        }
+
+        .location-info {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .location-info h2 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #a3d977;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+        }
+
+        .location-info p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            color: #a3d977;
+            text-align: center;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .weather-cards, .prediction-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .weather-card, .prediction-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .weather-card:hover, .prediction-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .date {
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #d4e9b9;
+            font-size: 1.1rem;
+        }
+
+        .weather-icon {
+            margin-bottom: 15px;
+        }
+
+        .weather-icon img {
+            width: 90px;
+            height: 90px;
+            filter: drop-shadow(2px 2px 5px rgba(0,0,0,0.3));
+        }
+
+        .temperature {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #a3d977;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+        }
+
+        .description {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            text-transform: capitalize;
+            opacity: 0.9;
+        }
+
+        .weather-details {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 10px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 15px;
+        }
+
+        .detail {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 0.95rem;
+        }
+
+        .detail i {
+            margin-bottom: 5px;
+            color: #a3d977;
+            font-size: 1.2rem;
+        }
+
+        .detail-value {
+            font-weight: 600;
+            color: #d4e9b9;
+        }
+
+        /* Prediction Card Specifics */
+        .prediction-card .crop-name {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #a3d977;
+            margin-bottom: 15px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+        }
+
+        .prediction-card .yield-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #d4e9b9;
+        }
+
+        .prediction-card .recommendation {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .prediction-card .recommendation h4 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: #a3d977;
+        }
+
+        .prediction-card .recommendation p {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            opacity: 0.8;
+        }
+
+        /* Loading and Error States */
+        .loading, .error {
+            text-align: center;
+            padding: 50px;
+            grid-column: 1 / -1; /* Span across all columns */
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .loading-spinner {
+            border: 5px solid rgba(163, 217, 119, 0.2);
+            border-top: 5px solid #a3d977;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error {
+            color: #ff6b6b;
+            background: rgba(255, 107, 107, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid rgba(255, 107, 107, 0.3);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            header {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .location-info h2 {
+                font-size: 2rem;
+            }
+            .section-title {
+                font-size: 1.5rem;
+            }
+            .weather-cards, .prediction-cards {
+                grid-template-columns: 1fr;
+            }
+            .weather-card, .prediction-card {
+                padding: 20px;
+            }
+            .temperature, .yield-value {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-seedling"></i>
+                <h1>Harvest Nexus</h1>
+            </div>
+            <a href="input.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i> Back to Search
+            </a>
+        </header>
+
+        <div class="location-info">
+            <h2 id="district-name">Weather Forecast</h2>
+            <p>7-Day Climate Prediction & Crop Yield Insights</p>
+        </div>
+
+        <h3 class="section-title">Weather Forecast</h3>
+        <div class="weather-cards" id="weather-cards">
+            <div class="loading">
+                <div class="loading-spinner"></div>
+                <p>Loading weather data...</p>
+            </div>
+        </div>
+
+        <h3 class="section-title">Crop Yield Predictions</h3>
+        <div class="prediction-cards" id="prediction-cards">
+            <div class="loading">
+                <div class="loading-spinner"></div>
+                <p>Loading crop predictions...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get district from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const district = urlParams.get('district');
+        
+        // Update district name in UI
+        if (district) {
+            document.getElementById('district-name').textContent = `Weather & Crop Forecast for ${district}`;
+            // Fetch weather data for the district
+            fetchWeatherData(district);
+        } else {
+            document.getElementById('weather-cards').innerHTML = `
+                <div class="error">
+                    <p>No district selected. Please go back to the <a href="input.html" style="color: #a3d977;">search page</a>.</p>
+                </div>
+            `;
+            document.getElementById('prediction-cards').innerHTML = ''; // Clear prediction loading
+        }
+        
+        async function fetchWeatherData(district) {
+            try {
+                const response = await fetch('/api/weather', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ district })
+                });
+                const data = await response.json();
+                
+                if (response.ok) {
+                    displayWeatherData(data.forecasts);
+                    generatePredictions(data.forecasts); // Pass weather data to prediction function
+                } else {
+                    displayError(data.error);
+                }
+            } catch (error) {
+                console.error('Error fetching weather data:', error);
+                displayError('Failed to load weather data. Please check your internet connection and try again.');
+            }
+        }
+        
+        function displayWeatherData(forecasts) {
+            const weatherCardsContainer = document.getElementById('weather-cards');
+            weatherCardsContainer.innerHTML = ''; // Clear loading spinner
+            
+            if (forecasts.length === 0) {
+                weatherCardsContainer.innerHTML = `
+                    <div class="error">
+                        <p>No weather data available for this district for the next 7 days.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            forecasts.forEach(day => {
+                const date = new Date(day.date + 'T00:00:00'); // Ensure date is parsed correctly
+                const iconUrl = `https://openweathermap.org/img/wn/${day.icon}@2x.png`;
+                
+                const weatherCard = document.createElement('div');
+                weatherCard.className = 'weather-card';
+                weatherCard.innerHTML = `
+                    <div class="date">${date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}</div>
+                    <div class="weather-icon">
+                        <img src="${iconUrl}" alt="${day.description}">
+                    </div>
+                    <div class="temperature">${Math.round(day.temp_max)}°C</div>
+                    <div class="description">${day.description}</div>
+                    <div class="weather-details">
+                        <div class="detail">
+                            <i class="fas fa-thermometer-empty"></i>
+                            <span class="detail-value">${Math.round(day.temp_min)}°C</span>
+                        </div>
+                        <div class="detail">
+                            <i class="fas fa-tint"></i>
+                            <span class="detail-value">${day.humidity}%</span>
+                        </div>
+                        <div class="detail">
+                            <i class="fas fa-wind"></i>
+                            <span class="detail-value">${day.wind_speed} m/s</span>
+                        </div>
+                    </div>
+                `;
+                
+                weatherCardsContainer.appendChild(weatherCard);
+            });
+        }
+        
+        function generatePredictions(weatherData) {
+            const predictionCardsContainer = document.getElementById('prediction-cards');
+            predictionCardsContainer.innerHTML = ''; // Clear loading spinner
+            
+            if (!weatherData || weatherData.length === 0) {
+                predictionCardsContainer.innerHTML = `
+                    <div class="error">
+                        <p>Cannot generate crop predictions without weather data.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Simple prediction logic based on weather conditions
+            // This is a placeholder. A real ML model would be much more complex.
+            const avgTemp = weatherData.reduce((sum, day) => sum + day.temp_max, 0) / weatherData.length;
+            const avgHumidity = weatherData.reduce((sum, day) => sum + day.humidity, 0) / weatherData.length;
+            const dominantWeather = weatherData[0].description.toLowerCase(); // Using first day's dominant weather
+            
+            const predictions = [
+                {
+                    name: 'Rice',
+                    yield: 'N/A', // Placeholder, will be calculated
+                    recommendation: '' // Placeholder
+                },
+                {
+                    name: 'Wheat',
+                    yield: 'N/A',
+                    recommendation: ''
+                },
+                {
+                    name: 'Corn',
+                    yield: 'N/A',
+                    recommendation: ''
+                }
+            ];
+
+            // Logic for Rice
+            if (avgTemp > 25 && avgHumidity > 70 && dominantWeather.includes('rain')) {
+                predictions[0].yield = 'High (4.5 tons/ha)';
+                predictions[0].recommendation = 'Excellent conditions for rice. Ensure proper drainage.';
+            } else if (avgTemp > 20 && avgHumidity > 60) {
+                predictions[0].yield = 'Good (3.8 tons/ha)';
+                predictions[0].recommendation = 'Favorable conditions. Monitor water levels and pest control.';
+            } else {
+                predictions[0].yield = 'Moderate (3.0 tons/ha)';
+                predictions[0].recommendation = 'May require supplemental irrigation. Consider drought-resistant varieties.';
+            }
+
+            // Logic for Wheat
+            if (avgTemp < 25 && avgTemp > 15 && !dominantWeather.includes('rain')) {
+                predictions[1].yield = 'High (3.5 tons/ha)';
+                predictions[1].recommendation = 'Ideal cool and dry conditions. Apply balanced fertilizers.';
+            } else if (avgTemp < 30 && avgTemp > 10) {
+                predictions[1].yield = 'Good (2.8 tons/ha)';
+                predictions[1].recommendation = 'Good conditions. Watch for sudden temperature changes.';
+            } else {
+                predictions[1].yield = 'Moderate (2.0 tons/ha)';
+                predictions[1].recommendation = 'Sub-optimal temperatures. Consider early/late sowing based on forecast.';
+            }
+
+            // Logic for Corn
+            if (avgTemp > 20 && avgTemp < 30 && avgHumidity > 60) {
+                predictions[2].yield = 'High (5.0 tons/ha)';
+                predictions[2].recommendation = 'Optimal growth conditions. Ensure adequate nutrient supply.';
+            } else if (avgTemp > 18 && avgTemp < 32) {
+                predictions[2].yield = 'Good (4.2 tons/ha)';
+                predictions[2].recommendation = 'Good conditions. Protect from strong winds if any.';
+            } else {
+                predictions[2].yield = 'Moderate (3.5 tons/ha)';
+                predictions[2].recommendation = 'May face stress from temperature extremes. Consider appropriate varieties.';
+            }
+            
+            predictions.forEach(crop => {
+                const predictionCard = document.createElement('div');
+                predictionCard.className = 'prediction-card';
+                predictionCard.innerHTML = `
+                    <div class="crop-name">${crop.name}</div>
+                    <div class="yield-value">${crop.yield}</div>
+                    <div class="recommendation">
+                        <h4>Recommendation</h4>
+                        <p>${crop.recommendation}</p>
+                    </div>
+                `;
+                
+                predictionCardsContainer.appendChild(predictionCard);
+            });
+        }
+        
+        function displayError(message) {
+            const weatherCardsContainer = document.getElementById('weather-cards');
+            const predictionCardsContainer = document.getElementById('prediction-cards');
+            
+            weatherCardsContainer.innerHTML = `<div class="error"><i class="fas fa-exclamation-circle"></i><p>${message}</p></div>`;
+            predictionCardsContainer.innerHTML = `<div class="error"><i class="fas fa-exclamation-circle"></i><p>Could not generate predictions due to data error.</p></div>`;
+        }
+    </script>
+</body>
+</html>
